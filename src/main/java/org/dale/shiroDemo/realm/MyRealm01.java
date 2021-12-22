@@ -2,6 +2,7 @@ package org.dale.shiroDemo.realm;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.AuthenticatingRealm;
+import org.apache.shiro.util.ByteSource;
 import org.dale.shiroDemo.model.User;
 
 import java.util.HashMap;
@@ -23,12 +24,12 @@ public class MyRealm01 extends AuthenticatingRealm {
         User u1 = new User();
         u1.setId(1);
         u1.setUsername("zhangsan");
-        u1.setPassword("123");
+        u1.setPassword("271dad09d1a71f27b7aeaa27306d5e24");
         users.put("zhangsan",u1);
         User u2 = new User();
         u2.setId(2);
         u2.setUsername("lisi");
-        u2.setPassword("123");
+        u2.setPassword("0c1b64535abaa1e871009019c6bcde0e");
         users.put("lisi",u2);
     }
 
@@ -47,7 +48,9 @@ public class MyRealm01 extends AuthenticatingRealm {
         if(user == null ){
             throw new UnknownAccountException("用户名不正确");
         }
-        return new SimpleAuthenticationInfo(user.getUsername(),user.getPassword(),getName());
+//        return new SimpleAuthenticationInfo(user.getUsername(),user.getPassword(),getName());
+        //返回带盐的simpleAuthenticationInfo对象
+        return new SimpleAuthenticationInfo(user.getUsername(),user.getPassword(), ByteSource.Util.bytes(username),getName());
     }
 
     private User getFromDB(String username) {

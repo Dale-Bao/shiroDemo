@@ -6,7 +6,15 @@
     <context:component-scan base-package="org.dale.shiroDemo" use-default-filters="true">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
-    <bean class="org.dale.shiroDemo.realm.MyRealm01" id="myRealm01"/>
+    <bean class="org.dale.shiroDemo.realm.MyRealm01" id="myRealm01">
+        <property name="credentialsMatcher">
+            <!--<bean class="org.apache.shiro.authc.credential.Md5HashedCredentialsMatcher">-->
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <property name="hashAlgorithmName" value="md5"/>
+                <property name="hashIterations" value="1024"/>
+            </bean>
+        </property>
+    </bean>
     <bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
         <property name="realm" ref="myRealm01"/>
     </bean>

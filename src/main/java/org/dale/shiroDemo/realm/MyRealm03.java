@@ -21,26 +21,26 @@ import java.util.Map;
 /**
  * 继承authenticatingRealm 可以实现认证功能
  */
-//@Component
-public class MyRealm01 extends AuthenticatingRealm {
+@Component
+public class MyRealm03 extends AuthenticatingRealm {
 
     private final Map<String, OmpUser> users = new HashMap<String, OmpUser>();
-
+/*
     @Autowired
-    OmpUserMapper ompUserMapper;
+    OmpUserMapper ompUserMapper;*/
 
-   /* public MyRealm01(){
-        User u1 = new User();
+    public MyRealm03(){
+        OmpUser u1 = new OmpUser();
         u1.setId(1);
         u1.setUsername("zhangsan");
         u1.setPassword("271dad09d1a71f27b7aeaa27306d5e24");
         users.put("zhangsan",u1);
-        User u2 = new User();
+        OmpUser u2 = new OmpUser();
         u2.setId(2);
         u2.setUsername("lisi");
         u2.setPassword("0c1b64535abaa1e871009019c6bcde0e");
         users.put("lisi",u2);
-    }*/
+    }
 
     /**
      * 根据用户输入的用户名去数据库查询用户信息并返回
@@ -53,7 +53,8 @@ public class MyRealm01 extends AuthenticatingRealm {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
         //获取登录用户名
         String username = usernamePasswordToken.getUsername();
-        OmpUser user = ompUserMapper.getUserByName(username);
+//        OmpUser user = ompUserMapper.getUserByName(username);
+        OmpUser user = getFromDB(usernamePasswordToken.getUsername());
         if(user == null ){
             throw new UnknownAccountException("用户名不正确");
         }
@@ -62,9 +63,9 @@ public class MyRealm01 extends AuthenticatingRealm {
         return new SimpleAuthenticationInfo(user.getUsername(),user.getPassword(), ByteSource.Util.bytes(user.getUsername()),getName());
     }
 
-    /*private User getFromDB(String username) {
+    private OmpUser getFromDB(String username) {
          return this.users.get(username);
-    }*/
+    }
 
     @Override
     public CredentialsMatcher getCredentialsMatcher() {

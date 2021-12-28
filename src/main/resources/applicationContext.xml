@@ -6,20 +6,28 @@
     <context:component-scan base-package="org.dale.shiroDemo" use-default-filters="true">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
-    <bean class="org.dale.shiroDemo.realm.MyRealm01" id="myRealm01">
-        <property name="credentialsMatcher">
-            <!--<bean class="org.apache.shiro.authc.credential.Md5HashedCredentialsMatcher">-->
-            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
-                <property name="hashAlgorithmName" value="md5"/>
-                <property name="hashIterations" value="1024"/>
+    <bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
+        <property name="authenticator">
+            <bean class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+                <property name="realms">
+                    <list>
+                        <ref bean="myRealm02"/>
+                        <ref bean="myRealm03"/>
+                    </list>
+                </property>
+                <property name="authenticationStrategy">
+                     <!--至少一个认证成功就通过-->
+                      <!--<bean class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"></bean>-->
+                     <!--全部通过才通过-->
+                      <!--<bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"></bean>-->
+                    <!--  第一个通过就结束-->
+                    <bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"></bean>
+                </property>
             </bean>
         </property>
     </bean>
-    <bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
-        <property name="realm" ref="myRealm01"/>
-    </bean>
     <bean class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" id="shiroFilter">
-       <property name="securityManager" ref="securityManager"/>
+        <property name="securityManager" ref="securityManager"/>
         <property name="filterChainDefinitions">
             <!--
             /doLogin 这个接口可以匿名访问

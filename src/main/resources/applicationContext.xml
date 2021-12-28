@@ -19,15 +19,17 @@
                      <!--至少一个认证成功就通过-->
                       <!--<bean class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"></bean>-->
                      <!--全部通过才通过-->
-                      <!--<bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"></bean>-->
+                      <bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"></bean>
                     <!--  第一个通过就结束-->
-                    <bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"></bean>
+<!--                    <bean class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"></bean>-->
                 </property>
             </bean>
         </property>
     </bean>
     <bean class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" id="shiroFilter">
         <property name="securityManager" ref="securityManager"/>
+<!--        配置登录页面-->
+        <property name="loginUrl" value="/01"/>
         <property name="filterChainDefinitions">
             <!--
             /doLogin 这个接口可以匿名访问

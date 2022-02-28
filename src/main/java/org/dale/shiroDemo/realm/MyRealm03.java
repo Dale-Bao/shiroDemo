@@ -3,7 +3,11 @@ package org.dale.shiroDemo.realm;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthenticatingRealm;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.dale.shiroDemo.mapper.OmpUserMapper;
 import org.dale.shiroDemo.model.OmpUser;
@@ -11,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Administrator on 2021/12/16.
@@ -22,7 +28,7 @@ import java.util.Map;
  * 继承authenticatingRealm 可以实现认证功能
  */
 @Component
-public class MyRealm03 extends AuthenticatingRealm {
+public class MyRealm03 extends AuthorizingRealm {
 
     private final Map<String, OmpUser> users = new HashMap<String, OmpUser>();
 /*
@@ -40,6 +46,18 @@ public class MyRealm03 extends AuthenticatingRealm {
         u2.setUsername("lisi");
         u2.setPassword("0c1b64535abaa1e871009019c6bcde0e");
         users.put("lisi",u2);
+    }
+
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        Set<String> roles = new HashSet<String>();
+        String username = (String) principalCollection.getPrimaryPrincipal();
+        if("zhangsan".equals(username)){
+           roles.add("admin");
+        }
+
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo(roles);
+        return authorizationInfo;
     }
 
     /**

@@ -13,4 +13,14 @@ public class HelloController {
     public String hello(){
         return "hello shiro";
     }
+
+    @GetMapping("/admin")
+    public String admin(){
+        return "hello admin";
+    }
+
+    @GetMapping("/unauthorizedUrl")
+    public String unauthorized(){
+        return "unauthorized";
+    }
 }

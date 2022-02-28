@@ -7,14 +7,24 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
     <bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
+        <property name="rememberMeManager">
+            <bean class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+                <property name="cookie">
+                    <bean class="org.apache.shiro.web.servlet.SimpleCookie">
+                        <property name="name" value="rememberMe"/>
+                        <property name="maxAge" value="604800"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
         <property name="authenticator">
             <bean class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
-                <property name="realms">
+               <!-- <property name="realms">
                     <list>
                         <ref bean="myRealm02"/>
                         <ref bean="myRealm03"/>
                     </list>
-                </property>
+                </property>-->
                 <property name="authenticationStrategy">
                      <!--至少一个认证成功就通过-->
                       <!--<bean class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"></bean>-->
@@ -25,18 +35,31 @@
                 </property>
             </bean>
         </property>
+        <property name="realms">
+            <list>
+                <ref bean="myRealm03"></ref>
+            </list>
+        </property>
     </bean>
     <bean class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" id="shiroFilter">
         <property name="securityManager" ref="securityManager"/>
 <!--        配置登录页面-->
-        <property name="loginUrl" value="/01"/>
+        <property name="loginUrl" value="/login"/>
+<!--        登录成功页（用户直接访问登录页登录，不是重定向登录页）-->
+        <property name="successUrl" value="/index"/>
+<!--        权限不足跳转地址-->
+        <property name="unauthorizedUrl" value="/unauthorizedUrl"/>
         <property name="filterChainDefinitions">
             <!--
             /doLogin 这个接口可以匿名访问
             /** 剩余其他接口,需要认证后才能访问
+            /doLogin=anon
+            /logout=logout
            -->
             <value>
                 /doLogin=anon
+                /hello=user
+                /admin=roles[admin]
                 /**=authc
             </value>
         </property>

@@ -26,6 +26,7 @@
             <td colspan="2">
                 <input type="submit" value="登录">
             </td>
+
         </tr>
     </table>
 </form>

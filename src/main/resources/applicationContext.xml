@@ -59,9 +59,15 @@
             <value>
                 /doLogin=anon
                 /hello=user
-                /admin=roles[admin]
+<!--                /admin=roles[admin]-->
                 /**=authc
             </value>
         </property>
+    </bean>
+<!--    添加3个bean来支持基于注解的权限配置-->
+    <bean class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"></property>
     </bean>
 </beans>
